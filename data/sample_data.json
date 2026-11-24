@@ -3,39 +3,43 @@
     {"name": "Портфель \"Тинькофф ИНВЕСТОР\"", "class": "stocks", "value": "413401.05", "note": "Акции"},
     {"name": "Портфель \"Тинькофф СПЕКУЛЯНТ\"", "class": "stocks", "value": "18614.70", "note": "Акции"},
     {"name": "КИТ ФИНАНС", "class": "stocks", "value": "27170.31", "note": "Акции"},
-    {"name": "БУБИТ", "class": "crypto", "value": "2085.44", "note": "Криптовалюта ($19.21 * курс)"},
+    {"name": "БУБИТ", "class": "crypto", "value": "2085.44", "note": "Криптовалюта"},
     {"name": "Опционы ФИНАМ", "class": "derivatives", "value": "7500.00", "note": "Опционы"},
     {"name": "Квартира", "class": "real_estate", "value": "3100000.00", "note": "Недвижимость"},
-    {"name": "Папа", "class": "receivables", "value": "26270.97", "note": "Долг"},
-    {"name": "Егоров Никита", "class": "receivables", "value": "3325.75", "note": "Долг"},
-    {"name": "Остальное", "class": "receivables", "value": "832.74", "note": ""}
+    {"name": "Долг: Папа", "class": "receivables", "value": "26270.97", "note": "Долг"},
+    {"name": "Долг: Егоров Никита", "class": "receivables", "value": "3325.75", "note": "Долг"}
   ],
   "liabilities": [
-    {"name": "Квартира (ипотека)", "value": "952088.26", "note": "Военная ипотека"},
-    {"name": "Барабанная установка", "value": "250000.00", "note": ""},
-    {"name": "Кредит", "value": "300000.00", "note": "За плечо"},
-    {"name": "Саксофон Roland Aerophone AE-10", "value": "50000.00", "note": "", "sale_price": "58807.10"}
+    {"name": "Потребительский кредит", "value": "181000.00", "note": "Под 18.4% (цель А4)"},
+    {"name": "Военная ипотека", "value": "952088.26", "note": "Погашается государством"}
   ],
   "income": [
-    {"category": "Категория", "name": "Зарплата", "planned": "43446.00", "actual": "47326.49"},
-    {"category": "Категория", "name": "Премия", "planned": "0.00", "actual": "14482.02"},
-    {"category": "Категория", "name": "Кешбэк", "planned": "179.00", "actual": "293.25"},
-    {"category": "Категория", "name": "Подработка", "planned": "0.00", "actual": "8833.33"}
+    {"category": "Основной", "name": "Зарплата", "planned": "45000.00", "actual": "47326.49"},
+    {"category": "Основной", "name": "Аванс", "planned": "15000.00", "actual": "15000.00"},
+    {"category": "Дополнительный", "name": "Подработка", "planned": "0.00", "actual": "8833.33"},
+    {"category": "Пассивный", "name": "Дивиденды", "planned": "500.00", "actual": "650.00"},
+    {"category": "Пассивный", "name": "Кешбэк", "planned": "300.00", "actual": "410.25"}
   ],
   "expense": [
-    {"category": "Категория", "name": "Продукты", "planned": "13663.18", "actual": "15301.57"},
-    {"category": "Категория", "name": "Жилье", "planned": "6045.45", "actual": "6945.57"},
-    {"category": "Категория", "name": "Налоги", "planned": "2525.91", "actual": "3524.86"},
-    {"category": "Краткосрочные цели", "name": "Кредит", "planned": "9957.00", "actual": "10407.96"}
+    {"category": "Обязательные", "name": "Кредит (по графику)", "planned": "10482.00", "actual": "10482.00"},
+    {"category": "Обязательные", "name": "Продукты и вода", "planned": "8000.00", "actual": "8200.00"},
+    {"category": "Обязательные", "name": "Коммунальные услуги и электроэнергия", "planned": "3500.00", "actual": "3600.00"},
+    {"category": "Обязательные", "name": "Телефон, интернет, VPN, Нейросети", "planned": "1200.00", "actual": "1250.00"},
+    {"category": "Обязательные", "name": "Лекарства и витамины", "planned": "1000.00", "actual": "800.00"},
+    {"category": "Желаемые", "name": "Кафе, ресторан, джанкфуд, кофе", "planned": "3000.00", "actual": "3500.00"},
+    {"category": "Желаемые", "name": "Кот (корм, наполнитель)", "planned": "1500.00", "actual": "1500.00"},
+    {"category": "Желаемые", "name": "Бытовая химия и товары для дома", "planned": "1000.00", "actual": "1200.00"},
+    {"category": "Хобби и развитие", "name": "Музыка, оркестр, аренда базы", "planned": "2000.00", "actual": "1800.00"},
+    {"category": "Трансферы", "name": "Помощь маме", "planned": "3000.00", "actual": "3000.00"}
   ],
   "goals": [
     {"name": "Камера GoPro", "horizon": "short", "planned": "7819.00", "actual": "7819.00"},
-    {"name": "Мебель в спальню", "horizon": "short", "planned": "10872.00", "actual": "0"}
+    {"name": "Мебель в спальню", "horizon": "short", "planned": "10872.00", "actual": "0.00"}
   ],
   "fire": {
-    "monthly_income": "43446.00",
+    "monthly_income": "62000.00",
     "annual_rate": "0.21",
-    "contribution_share": "0.10",
+    "contribution_share": "0.15",
     "retirement_date": "2028-11-24"
   }
 }
