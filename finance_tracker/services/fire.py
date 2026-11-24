@@ -91,20 +91,15 @@ def _years_to_retirement(p: FireParams) -> int:
 
 
 def _project_growth(
-    start: Decimal, annual_rate: Decimal, monthly_contrib: Decimal, years: int
+    start: Decimal, annual_rate: Decimal, monthly_contrib: Decimal,
+    years: int, start_year: int,
 ) -> list[YearRow]:
-    """Сложный рост. Без пополнений — годовая капитализация;
-    с пополнениями — ежемесячная капитализация + взнос в конце месяца."""
     rows: list[YearRow] = []
     balance = start
     monthly_rate = (Decimal(1) + annual_rate) ** (Decimal(1) / Decimal(12)) - Decimal(1)
-    year = start_year = balance  # noqa (placeholder, заменяется ниже)
     for i in range(years):
         begin = balance
         for _ in range(12):
             balance = balance * (Decimal(1) + monthly_rate) + monthly_contrib
-        rows.append(YearRow(year=0, start=begin.quantize(Q2), end=balance.quantize(Q2)))
-    # проставляем годы
-    for idx, row in enumerate(rows):
-        row.year = idx  # будет заменено вызывающим кодом на календарный год
+        rows.append(YearRow(year=start_year + i, start=begin.quantize(Q2), end=balance.quantize(Q2)))
     return rows
