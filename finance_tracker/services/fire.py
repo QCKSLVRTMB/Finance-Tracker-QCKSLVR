@@ -54,19 +54,30 @@ def plan_fire(p: FireParams) -> FireResult:
 
     days_left = max((p.retirement_date - p.today).days, 0)
     months_left = (Decimal(days_left) / Decimal("30.44")).quantize(Decimal("0.01"))
-    progress = (p.current_invested / required_capital).quantize(Decimal("0.0001"))
+
+    # Защита от деления на ноль, если капитал ещё не определён
+    if required_capital > 0:
+        progress = (p.current_invested / required_capital).quantize(Decimal("0.0001"))
+    else:
+        progress = Decimal("0")
 
     contributions_to_date = (monthly_contribution * months_left).quantize(Q2)
-    shortfall = (required_capital - p.current_invested - contributions_to_date).quantize(Q2)
+    shortfall = (
+        required_capital - p.current_invested - contributions_to_date
+    ).quantize(Q2)
 
-    daily_topup = (shortfall / Decimal(days_left)).quantize(Q2) if days_left else Q2
+    daily_topup = (
+        (shortfall / Decimal(days_left)).quantize(Q2) if days_left else Decimal("0")
+    )
     req_income = (
         (shortfall / months_left / p.contribution_share).quantize(Q2)
-        if months_left > 0
-        else Q2
+        if months_left > 0 and p.contribution_share > 0
+        else Decimal("0")
     )
 
     years = _years_to_retirement(p)
+
+    # ✅ ИСПРАВЛЕНО: оба вызова теперь передают 5 аргументов, включая start_year
     return FireResult(
         annual_target=annual_target,
         required_capital=required_capital,
@@ -79,9 +90,11 @@ def plan_fire(p: FireParams) -> FireResult:
         shortfall=max(shortfall, Decimal("0")),
         daily_topup=daily_topup,
         required_monthly_income=req_income,
-        growth_no_contrib=_project_growth(p.current_invested, p.annual_rate, Decimal("0"), years),
+        growth_no_contrib=_project_growth(
+            p.current_invested, p.annual_rate, Decimal("0"), years, p.today.year
+        ),
         growth_with_contrib=_project_growth(
-            p.current_invested, p.annual_rate, monthly_contribution, years
+            p.current_invested, p.annual_rate, monthly_contribution, years, p.today.year
         ),
     )
 
@@ -91,15 +104,27 @@ def _years_to_retirement(p: FireParams) -> int:
 
 
 def _project_growth(
-    start: Decimal, annual_rate: Decimal, monthly_contrib: Decimal,
-    years: int, start_year: int,
+    start: Decimal,
+    annual_rate: Decimal,
+    monthly_contrib: Decimal,
+    years: int,
+    start_year: int,
 ) -> list[YearRow]:
+    """Сложный рост с ежемесячной капитализацией и взносом в конце месяца."""
     rows: list[YearRow] = []
     balance = start
+    # Месячная ставка, эквивалентная годовой: (1+r)^(1/12) - 1
     monthly_rate = (Decimal(1) + annual_rate) ** (Decimal(1) / Decimal(12)) - Decimal(1)
+
     for i in range(years):
         begin = balance
         for _ in range(12):
             balance = balance * (Decimal(1) + monthly_rate) + monthly_contrib
-        rows.append(YearRow(year=start_year + i, start=begin.quantize(Q2), end=balance.quantize(Q2)))
+        rows.append(
+            YearRow(
+                year=start_year + i,
+                start=begin.quantize(Q2),
+                end=balance.quantize(Q2),
+            )
+        )
     return rows
