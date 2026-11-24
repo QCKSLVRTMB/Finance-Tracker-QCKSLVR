@@ -1,0 +1,41 @@
+{
+  "assets": [
+    {"name": "Портфель \"Тинькофф ИНВЕСТОР\"", "class": "stocks", "value": "413401.05", "note": "Акции"},
+    {"name": "Портфель \"Тинькофф СПЕКУЛЯНТ\"", "class": "stocks", "value": "18614.70", "note": "Акции"},
+    {"name": "КИТ ФИНАНС", "class": "stocks", "value": "27170.31", "note": "Акции"},
+    {"name": "БУБИТ", "class": "crypto", "value": "2085.44", "note": "Криптовалюта ($19.21 * курс)"},
+    {"name": "Опционы ФИНАМ", "class": "derivatives", "value": "7500.00", "note": "Опционы"},
+    {"name": "Квартира", "class": "real_estate", "value": "3100000.00", "note": "Недвижимость"},
+    {"name": "Папа", "class": "receivables", "value": "26270.97", "note": "Долг"},
+    {"name": "Егоров Никита", "class": "receivables", "value": "3325.75", "note": "Долг"},
+    {"name": "Остальное", "class": "receivables", "value": "832.74", "note": ""}
+  ],
+  "liabilities": [
+    {"name": "Квартира (ипотека)", "value": "952088.26", "note": "Военная ипотека"},
+    {"name": "Барабанная установка", "value": "250000.00", "note": ""},
+    {"name": "Кредит", "value": "300000.00", "note": "За плечо"},
+    {"name": "Саксофон Roland Aerophone AE-10", "value": "50000.00", "note": "", "sale_price": "58807.10"}
+  ],
+  "income": [
+    {"category": "Категория", "name": "Зарплата", "planned": "43446.00", "actual": "47326.49"},
+    {"category": "Категория", "name": "Премия", "planned": "0.00", "actual": "14482.02"},
+    {"category": "Категория", "name": "Кешбэк", "planned": "179.00", "actual": "293.25"},
+    {"category": "Категория", "name": "Подработка", "planned": "0.00", "actual": "8833.33"}
+  ],
+  "expense": [
+    {"category": "Категория", "name": "Продукты", "planned": "13663.18", "actual": "15301.57"},
+    {"category": "Категория", "name": "Жилье", "planned": "6045.45", "actual": "6945.57"},
+    {"category": "Категория", "name": "Налоги", "planned": "2525.91", "actual": "3524.86"},
+    {"category": "Краткосрочные цели", "name": "Кредит", "planned": "9957.00", "actual": "10407.96"}
+  ],
+  "goals": [
+    {"name": "Камера GoPro", "horizon": "short", "planned": "7819.00", "actual": "7819.00"},
+    {"name": "Мебель в спальню", "horizon": "short", "planned": "10872.00", "actual": "0"}
+  ],
+  "fire": {
+    "monthly_income": "43446.00",
+    "annual_rate": "0.21",
+    "contribution_share": "0.10",
+    "retirement_date": "2028-11-24"
+  }
+}
