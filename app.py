@@ -212,4 +212,110 @@ with tabs[3]:
             markers=True, labels={"value": "Капитал (₽)", "variable": "Сценарий"}
         )
         fig.add_hline(
-           
+            y=to_float(res.required_capital), line_dash="dash", line_color="green", 
+            annotation_text=f"Цель FIRE: {money(res.required_capital)}"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+# ================= ТАБ 5: ДОРОЖНАЯ КАРТА (НОВЫЙ) =================
+with tabs[4]:
+    st.header("🗺️ Конструктор дорожной карты целей")
+    st.markdown("Ваш ориентировочный свободный поток: **~37 900 ₽/мес**. Выберите цели, и мы рассчитаем реалистичный график их достижения.")
+    
+    col1, col2 = st.columns([1, 2])
+    
+    with col1:
+        st.subheader("1. Параметры бюджета")
+        base_flow = st.number_input("Базовый свободный поток (₽/мес)", value=37900, step=500)
+        
+        st.markdown("**Блок D: Оптимизация расходов**")
+        st.markdown("Сколько дополнительно высвободите в месяц за счёт аудита подписок, тарифов и кэшбэка?")
+        optimization_savings = st.slider("Доп. экономия в месяц", 0, 10000, 2000, step=500)
+        
+        total_budget = base_flow + optimization_savings
+        st.metric("Итого бюджет на цели", f"{int(total_budget):,} ₽/мес".replace(",", " "), delta=f"+{int(optimization_savings)} ₽ за счёт оптимизации")
+
+    with col2:
+        st.subheader("2. Выбор целей")
+        st.markdown("*(Алгоритм автоматически выстроит их в оптимальном порядке)*")
+        
+        short_goals = [k for k, v in GOAL_CATALOG.items() if v["type"] == "short"]
+        medium_goals = [k for k, v in GOAL_CATALOG.items() if v["type"] == "medium"]
+        long_goals = [k for k, v in GOAL_CATALOG.items() if v["type"] == "long"]
+        
+        selected = []
+        selected.extend(st.multiselect(
+            "🛡️ Краткосрочные (Фундамент)", 
+            options=short_goals, 
+            format_func=lambda x: f"{x}: {GOAL_CATALOG[x]['name']}",
+            default=["A2", "A4", "A6"]
+        ))
+        selected.extend(st.multiselect(
+            "📈 Среднесрочные (Рост)", 
+            options=medium_goals, 
+            format_func=lambda x: f"{x}: {GOAL_CATALOG[x]['name']}",
+            default=["B13"]
+        ))
+        selected.extend(st.multiselect(
+            "🏛️ Долгосрочные (Будущее)", 
+            options=long_goals, 
+            format_func=lambda x: f"{x}: {GOAL_CATALOG[x]['name']}",
+            default=[]
+        ))
+        
+        # Убираем дубликаты, сохраняя порядок выбора
+        selected = list(dict.fromkeys(selected))
+
+    if selected and total_budget > 0:
+        st.divider()
+        st.subheader("3. Ваш персональный план")
+        
+        roadmap = build_roadmap(selected, Decimal(str(total_budget)), Decimal(str(optimization_savings)))
+        
+        timeline_data = []
+        for step in roadmap:
+            timeline_data.append({
+                "Этап": step.goal_id,
+                "Цель": step.goal_name,
+                "Сумма": f"{int(step.cost):,} ₽".replace(",", " "),
+                "Длительность": f"{step.months_needed} мес.",
+                "Финиш": f"через {step.cumulative_months} мес.",
+                "Комментарий": step.note
+            })
+            
+        df_timeline = pd.DataFrame(timeline_data)
+        st.dataframe(df_timeline, hide_index=True, use_container_width=True)
+        
+        # График Ганта (упрощённый через Plotly Bar)
+        chart_data = []
+        current_month = 0
+        for step in roadmap:
+            chart_data.append({
+                "Задача": f"{step.goal_id}: {step.goal_name}",
+                "Старт (мес)": current_month,
+                "Длительность": step.months_needed,
+                "Финиш (мес)": current_month + step.months_needed
+            })
+            current_month += step.months_needed
+            
+        df_gantt = pd.DataFrame(chart_data)
+        
+        fig = px.bar(
+            df_gantt, 
+            x="Длительность", 
+            y="Задача", 
+            base="Старт (мес)",
+            orientation='h',
+            text="Финиш (мес)",
+            labels={"Длительность": "Месяцев", "Задача": "Цель", "Финиш (мес)": "Месяц завершения"},
+            color="Задача",
+            color_discrete_sequence=px.colors.qualitative.Set2
+        )
+        fig.update_traces(texttemplate="Финиш: мес. %{text}", textposition="outside")
+        fig.update_layout(showlegend=False, xaxis_title="Месяцы от начала", yaxis_title="")
+        st.plotly_chart(fig, use_container_width=True)
+        
+        years = current_month / 12
+        st.success(f"✅ При бюджете **{int(total_budget):,} ₽/мес** вы закроете все выбранные цели за **{current_month} месяцев** ({years:.1f} лет).")
+    elif not selected:
+        st.info("👈 Выберите хотя бы одну цель в меню справа, чтобы построить план.")
