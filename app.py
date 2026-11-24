@@ -120,7 +120,7 @@ with tabs[1]:
             return "color: gray"
             
         st.dataframe(
-            alloc_df.style.applymap(color_delta, subset=["Δ (докупить/продать)"]), 
+            alloc_df.style.map(color_delta, subset=["Δ (докупить/продать)"])
             hide_index=True, use_container_width=True
         )
         
